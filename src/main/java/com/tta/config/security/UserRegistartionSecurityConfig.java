@@ -1,4 +1,4 @@
-package com.tta.security;
+package com.tta.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

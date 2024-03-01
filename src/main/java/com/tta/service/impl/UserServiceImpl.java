@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.tta.exception.UserAlreadyExistsException;
 import com.tta.model.entity.User;
+import com.tta.model.entity.VerificationToken;
 import com.tta.registration.RegistrationRequst;
 import com.tta.repository.UserRepository;
+import com.tta.repository.VerificationTokenRepositry;
 import com.tta.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ public class UserServiceImpl implements UserService {
 
 	private  final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final VerificationTokenRepositry tokenRepository;
+	
 	
 	@Override
 	public List<User> getUsers() {
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
 		var newUser= new User();
 		newUser.setFirstName(request.firstName());
 		newUser.setLastName(request.lastName());
-		newUser.setEmial(request.email());
+		newUser.setEmail(request.email());
 		newUser.setPassword(passwordEncoder.encode(request.password()));
 		newUser.setRole(request.role());
 		
@@ -49,6 +53,13 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> findByEmail(String email) {
 		
 		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public void saveUserVerificationToken(User user, String token) {
+		var verificationToken=new VerificationToken(token, user);
+
+		this.tokenRepository.save(verificationToken);
 	}
 
 }
